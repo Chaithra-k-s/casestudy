@@ -1,7 +1,8 @@
 const express=require("express");
 const app=express();
-const path=require("path");
+const mangoose=require("mongoose")
 
+const bodyParser=require("body-parser");
 
 app.get("/",(req,res)=>{
     res.send("hello checking")
