@@ -1,35 +1,21 @@
 //import libraries
 const express=require("express");
-const app=express();
+const router=express.Router();
 const mongoose=require("mongoose");
 const bodyParser=require("body-parser");
-app.use(bodyParser.json());
+router.use(bodyParser.json());
 
 //connect to database
-
-// let crop=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("crop database connected"));
-let farmer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/farmer?retryWrites=true&w=majority",
-()=>console.log("farmer database connected"));
-// let dealer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/dealer?retryWrites=true&w=majority",
-// ()=>console.log("delaer database connected"));
-// let admin=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/admin?retryWrites=true&w=majority",
-// ()=>console.log("admin database connected"));
-// let invoice=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/invoice?retryWrites=true&w=majority",
-// ()=>console.log("invoice database connected"));
+const { db } = require("../schemas/farmerschema");
+db.collection("farmer",{autoIndexId:true})
 
 //importing schema
-
 const farmerschema=require("../schemas/farmerschema");
-// const dealerschema=require("../schemas/dealerschema");
-// const cropschema=require("../schemas/cropschema");
-// const invoiceschema=require("../schemas/invoiceschema");
-// const admin=require("../schemas/adminschema")
 
 // Api methods
 
 // get all farmer details
-app.get("/farmer/",(req,res)=>{
+router.get("/farmer/",(req,res)=>{
     farmerschema.find({}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
@@ -43,7 +29,7 @@ app.get("/farmer/",(req,res)=>{
 })
 
 // get details of particular farmer with email
-app.get('/farmer/profile/:id',(res,req)=>{
+router.get('/farmer/profile/:id',(res,req)=>{
     farmerschema.findOne({email:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
@@ -57,13 +43,13 @@ app.get('/farmer/profile/:id',(res,req)=>{
 })
 
 // adding farmer only for admin
-app.post("/farmer/signup",(req,res)=>{
+router.post("/farmer/signup",(req,res)=>{
     farmerschema.create(req.body).then((farmer)=>{
         res.send("farmer added with following details",farmer)
     })
 })
 
-app.put("/farmer/:id",(req,res)=>{
+router.put("/farmer/:id",(req,res)=>{
     cropschema.findOneAndUpdate({email:req.params.id},{$set:
         {
            //bank_details.account_number=acc_number,
@@ -85,7 +71,7 @@ app.put("/farmer/:id",(req,res)=>{
         res.send("updating data in database")
 })
 
-app.delete('/crop/:id',(res,req)=>{
+router.delete('/crop/:id',(res,req)=>{
     cropschema.findOneAndDelete({crop_name:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error deleting data from database",err)
@@ -98,4 +84,4 @@ app.delete('/crop/:id',(res,req)=>{
     req.send("Deleting specific data from crop database collection")
 })
 
-app.listen("3000",()=>console.log("server is running on 3000"))
+module.exports=router;

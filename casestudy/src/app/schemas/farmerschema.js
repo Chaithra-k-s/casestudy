@@ -32,4 +32,4 @@ var farmerschema=new schema({
     bank_details:bank
 })
 
-module.exports=mangoose.model("farmer",farmerschema);
+module.exports=mongoose.model("farmer",farmerschema);

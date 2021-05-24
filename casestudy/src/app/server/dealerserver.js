@@ -1,33 +1,18 @@
 //import libraries
 const express=require("express");
-const app=express();
+const router=express.Router();
 const mongoose=require("mongoose");
 const bodyParser=require("body-parser");
-app.use(bodyParser.json());
-
-//connect to database
-// let crop=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("crop database connected"));
-// let farmer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("farmer database connected"));
-let dealer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-()=>console.log("delaer database connected"));
-// let admin=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("admin database connected"));
-// let invoice=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("invoice database connected"));
+router.use(bodyParser.json());
 
 //importing schema
-// const farmerschema=require("../schemas/farmerschema");
 const dealerschema=require("../schemas/dealerschema");
-// const cropschema=require("../schemas/cropschema");
-// const invoiceschema=require("../schemas/invoiceschema");
-// const admin=require("../schemas/adminschema")
-
+const { db } = require("../schemas/dealerschema");
+db.collection("dealer",{autoIndexId:true})
 // Api methods
 
 //dealer
-app.get("/dealer/",(req,res)=>{
+router.get("/dealer/",(req,res)=>{
     dealerschema.find({}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
@@ -40,7 +25,7 @@ app.get("/dealer/",(req,res)=>{
     res.send("getting all elements from dealer database collection")
 })
 
-app.get('/dealer/:id',(res,req)=>{
+router.get('/dealer/:id',(res,req)=>{
     dealerschema.findOne({_id:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
@@ -53,13 +38,13 @@ app.get('/dealer/:id',(res,req)=>{
     req.send("getting specific data from crop database collection")
 })
 
-app.post("/crop/",(req,res)=>{
+router.post("/crop/",(req,res)=>{
     dealerschema.create(req.body).then((crop)=>{
         res.send("crop added with following details",crop)
     })
 })
 
-app.put("/crop/:id",(req,res)=>{
+router.put("/crop/:id",(req,res)=>{
     dealerschema.findOneAndUpdate({crop_name:req.params.id},{$set:
         {
             crop_name:req.body.crop_name,
@@ -81,7 +66,7 @@ app.put("/crop/:id",(req,res)=>{
 })
 
 
-app.delete('/crop/:id',(res,req)=>{
+router.delete('/crop/:id',(res,req)=>{
     dealerschema.findOneAndDelete({crop_name:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error deleting data from database",err)
@@ -94,4 +79,4 @@ app.delete('/crop/:id',(res,req)=>{
     req.send("Deleting specific data from crop database collection")
 })
 
-app.listen("3000",()=>console.log("server is running on 3000"))
+module.exports=router;

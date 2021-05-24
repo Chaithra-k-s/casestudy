@@ -1,15 +1,10 @@
 const express=require("express");
 const mongoose=require("mongoose");
 const router=express.Router();
-const admin=require("../schemas/adminschema");
-const bodyParser=require("body-parser");
-router.use(bodyParser.json());
+const invoice=require("../schemas/invoiceschema");
 
-const { db } = require("../schemas/adminschema");
-db.collection("admin",{autoIndexId:true})
-
-//importing schema
-const cropschema=require("../schemas/cropschema");
+const { db } = require("../schemas/invoiceschema");
+db.collection("invoice",{autoIndexId:true})
 
 router.post('/signup',(req,res,next)=>{
     const createdadmin=new admin({

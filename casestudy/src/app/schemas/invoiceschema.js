@@ -19,4 +19,4 @@ var invoiceschema=new schema({
     payment_method:payment
 })
 
-module.exports=mangoose.model("invoice",invoiceschema);
+module.exports=mongoose.model("invoice",invoiceschema);

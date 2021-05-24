@@ -2,8 +2,8 @@ const mongoose=require("mongoose");
 var schema=mongoose.Schema;
 
 var crop=new schema({
-    crop_name: string,
-    crop_type: string
+    crop_name: String,
+    crop_type: String
 })
 
 var bank=new schema({
@@ -37,4 +37,4 @@ var dealerschema=new schema({
     bank_details:bank
 })
 
-module.exports=mangoose.model("dealer",dealerschema);
+module.exports=mongoose.model("dealer",dealerschema);
