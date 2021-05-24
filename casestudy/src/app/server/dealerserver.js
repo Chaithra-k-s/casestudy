@@ -2,81 +2,116 @@
 const express=require("express");
 const router=express.Router();
 const mongoose=require("mongoose");
-const bodyParser=require("body-parser");
-router.use(bodyParser.json());
+
+//connect to database
+const { db } = require("../schemas/dealerschema");
+db.collection("dealer",{autoIndexId:true})
 
 //importing schema
 const dealerschema=require("../schemas/dealerschema");
-const { db } = require("../schemas/dealerschema");
-db.collection("dealer",{autoIndexId:true})
+
 // Api methods
 
-//dealer
-router.get("/dealer/",(req,res)=>{
+//getting all data
+router.get("/",(req,res)=>{
     dealerschema.find({}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
         }
         else{
-            res.json(data);
+            res.send(data);
             console.log(data);
         }
     })
-    res.send("getting all elements from dealer database collection")
 })
 
-router.get('/dealer/:id',(res,req)=>{
-    dealerschema.findOne({_id:req.params.id}).exec((err,data)=>{
+// fetch particular details with name
+router.get('/:id',(req,res)=>{
+    dealerschema.findOne({name:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
         }
         else{
-            res.json(data);
+            res.send(data);
             console.log(data);
         }
     })
-    req.send("getting specific data from crop database collection")
 })
 
-router.post("/crop/",(req,res)=>{
-    dealerschema.create(req.body).then((crop)=>{
-        res.send("crop added with following details",crop)
-    })
-})
-
-router.put("/crop/:id",(req,res)=>{
-    dealerschema.findOneAndUpdate({crop_name:req.params.id},{$set:
-        {
-            crop_name:req.body.crop_name,
-            crop_type:req.body.crop_type,
-            crop_quantity:req.body.crop_quantity,
-            location:req.body.location,
-            crop_img_url:req.body.crop_img_url,
-            uploaded_by:req.body.uploaded_by
-        }}).exec((err,data)=>{
-            if(err){
-                res.send("error fetching data from database",err)
-            }
-            else{
-                res.send("data updated");
-                console.log("data updated with:",data);
-            }
+//adding crop
+router.post("/",(req,res)=>{
+    console.log(req.body)
+    const dealer=new dealerschema({
+        _id:new mongoose.Types.ObjectId(),
+        name:req.body.name,
+        email:req.body.email,
+        password:req.body.password,
+        subscribed_crops:{
+            crop_name:req.body.subscribed_crops.crop_name,
+            crop_type:req.body.subscribed_crops.crop_type
+        },
+        bank_details:{
+            bank_name:req.body.bank_details.bank_name,
+            account_number:req.body.bank_details.account_number,
+            ifsc_code:req.body.bank_details.ifsc_code
+        }
+    });
+     dealer.save()
+    .then(result=>{
+        res.status(201).json({
+            message:"updated successfully",
+            dealerdetails:result
         })
-        res.send("updating data in database")
+    })
+    .catch(err=>
+        {
+            console.log(err);
+            res.status(500).json({
+                error:err
+            })
+        })
+    }
+)
+
+//updating a particular crop
+router.put("/:id",(req,res)=>{
+    dealerschema.findOneAndUpdate({name:req.params.id},{$set:
+        {
+            name:req.body.name,
+            email:req.body.email,
+            password:req.body.password,
+            subscribed_crops:{
+                crop_name:req.body.subscribed_crops.crop_name,
+                crop_type:req.body.subscribed_crops.crop_type
+            },
+            bank_details:{
+                bank_name:req.body.bank_details.bank_name,
+                account_number:req.body.bank_details.account_number,
+                ifsc_code:req.body.bank_details.ifsc_code
+            }
+        }})
+        .then(result=>{
+            console.log(result);
+        })
+        .catch(err=>console.log(err));
+        res.status(200).json({
+            message:"updating dealer data in database",
+            edited_details:req.body
+        })
 })
 
-
-router.delete('/crop/:id',(res,req)=>{
-    dealerschema.findOneAndDelete({crop_name:req.params.id}).exec((err,data)=>{
+//deleteing particular crop
+router.delete('/:id',(req,res)=>{
+    dealerschema.findOneAndDelete({name:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error deleting data from database",err)
         }
         else{
-            res.send("data deleted");
-            console.log("data deleted",data);
-        }
-    })
-    req.send("Deleting specific data from crop database collection")
+            res.send({
+                message:"data deleted",
+            })
+    }
+})
 })
 
 module.exports=router;

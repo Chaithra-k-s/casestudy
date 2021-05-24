@@ -2,8 +2,6 @@
 const express=require("express");
 const router=express.Router();
 const mongoose=require("mongoose");
-const bodyParser=require("body-parser");
-router.use(bodyParser.json());
 
 //connect to database
 const { db } = require("../schemas/cropschema");
@@ -28,8 +26,8 @@ router.get("/",(req,res)=>{
 })
 
 // fetch particular crop details with name
-router.get('/:id',(res,req)=>{
-    cropschema.findOne({_id:req.params.id}).exec((err,data)=>{
+router.get('/:id',(req,res)=>{
+    cropschema.findOne({crop_name:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
         }
@@ -42,18 +40,35 @@ router.get('/:id',(res,req)=>{
 
 //adding crop
 router.post("/",(req,res)=>{
-   // _id:new mongoose.Types.ObjectId(),
-     cropschema.create(req.body).then((crop,err)=>{
-        if(err){
-            res.send("error adding data to database",err)
-        }else{
-            console.log(crop);
-            res.send(crop);
-        }
-    })  
-    // console.log("post method")
-    // res.send(req.body)
-})
+    const crop=new cropschema({
+        _id:new mongoose.Types.ObjectId(),
+        crop_name:req.body.crop_name,
+        crop_type:req.body.crop_type,
+        crop_quantity:req.body.crop_quantity,
+        location:req.body.location,
+        crop_img_url:req.body.crop_type,
+        uploaded_by:req.body.uploaded_by
+    });
+    crop.save()
+    .then(result=>{
+        res.status(201).json({
+            message:"updated successfully",
+            cropdetails:result
+        })
+    })
+    .catch(err=>
+        {
+            console.log(err);
+            res.status(500).json({
+                error:err
+            })
+        })
+    //     res.status(200).json({
+    //     message:"updating data in database",
+    //     createdcrop:crop
+    // })
+    }
+)
 
 //updating a particular crop
 router.put("/:id",(req,res)=>{
@@ -65,30 +80,29 @@ router.put("/:id",(req,res)=>{
             location:req.body.location,
             crop_img_url:req.body.crop_img_url,
             uploaded_by:req.body.uploaded_by
-        }}).exec((err,data)=>{
-            if(err){
-                res.send("error fetching data from database",err)
-            }
-            else{
-                res.send("data updated");
-                console.log("data updated with:",data);
-            }
+        }})
+        .then(result=>{
+            console.log(result);
         })
-        res.send("updating data in database")
+        .catch(err=>console.log(err));
+        res.status(200).json({
+            message:"updating data in database",
+            editedcrop:req.body
+        })
 })
 
 //deleteing particular crop
-router.delete('/:id',(res,req)=>{
+router.delete('/:id',(req,res)=>{
     cropschema.findOneAndDelete({crop_name:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error deleting data from database",err)
         }
         else{
-            res.send("data deleted");
-            console.log("data deleted",data);
-        }
-    })
-    req.send("Deleting specific data from crop database collection")
+            res.send({
+                message:"data deleted",
+            })
+    }
+})
 })
 
 module.exports=router;

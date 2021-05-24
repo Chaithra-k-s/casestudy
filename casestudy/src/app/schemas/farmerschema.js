@@ -14,7 +14,7 @@ var bank=new schema({
 })
 
 var farmerschema=new schema({
-    _id:mongoose.Types.ObjectId,
+    _id:mongoose.Schema.Types.ObjectId,
     name:{
         type:String,
         required:true

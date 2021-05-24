@@ -19,7 +19,7 @@ var bank=new schema({
 })
 
 var dealerschema=new schema({
-    _id:mongoose.Types.ObjectId,
+    _id:mongoose.Schema.Types.ObjectId,
     name:{
         type:String,
         required:true
