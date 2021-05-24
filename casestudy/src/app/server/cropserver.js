@@ -8,21 +8,10 @@ app.use(bodyParser.json());
 //connect to database
 let crop=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
 ()=>console.log("crop database connected"));
-// let farmer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("farmer database connected"));
-// let dealer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("delaer database connected"));
-// let admin=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("admin database connected"));
-// let invoice=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-// ()=>console.log("invoice database connected"));
 
 //importing schema
-// const farmerschema=require("../../schemas/farmerschema");
-// const dealerschema=require("../../schemas/dealerschema");
-const cropschema=require("../../schemas/cropschema");
-// const invoiceschema=require("../../schemas/invoiceschema");
-// const admin=require("../../schemas/adminschema")
+
+const cropschema=require("../schemas/cropschema");
 
 // Api methods
 
@@ -33,37 +22,36 @@ app.get("/crop/",(req,res)=>{
             res.send("error fetching data from database")
         }
         else{
-            res.json(data);
+            res.send(data);
             console.log(data);
         }
     })
-    res.send("getting all elements from crop database collection")
 })
 
 // fetch particular crop details with name
 app.get('/crop/:id',(res,req)=>{
-    cropschema.findOne({crop_name:req.params.id}).exec((err,data)=>{
+    cropschema.findOne({_id:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
         }
         else{
-            res.json(data);
+            res.send(data);
             console.log(data);
         }
     })
-    req.send("getting specific data from crop database collection")
 })
 
 //adding crop
 app.post("/crop/",(req,res)=>{
-    cropschema.create(req.body).then((err,crop)=>{
+    _id:new mongoose.Types.ObjectId(),
+     cropschema.create(req.body).then((crop,err)=>{
         if(err){
             res.send("error adding data to database",err)
         }else{
-            res.send("crop added with following details",crop)
+            console.log(crop);
+            res.send(crop);
         }
-        res.send("adding crop details ....",crop)
-    })
+    })  
 })
 
 //updating a particular crop
@@ -102,4 +90,4 @@ app.delete('/crop/:id',(res,req)=>{
     req.send("Deleting specific data from crop database collection")
 })
 
-app.listen("8000",()=>console.log("server is running on 3000"))
+app.listen("8000",()=>console.log("server is running on 8000"))

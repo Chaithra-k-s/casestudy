@@ -85,7 +85,6 @@ app.put("/farmer/:id",(req,res)=>{
         res.send("updating data in database")
 })
 
-
 app.delete('/crop/:id',(res,req)=>{
     cropschema.findOneAndDelete({crop_name:req.params.id}).exec((err,data)=>{
         if(err){

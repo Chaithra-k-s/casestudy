@@ -1,0 +1,29 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "restapi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chaithra-k-s/casestudy.git"
+  },
+  "keywords": [
+    "node",
+    "api"
+  ],
+  "author": "chaithra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chaithra-k-s/casestudy/issues"
+  },
+  "homepage": "https://github.com/Chaithra-k-s/casestudy#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.10"
+  }
+}

@@ -2,6 +2,7 @@ const mongoose=require("mongoose");
 var schema=mongoose.Schema;
 
 var adminschema=new schema({
+    _id:mongoose.Schema.Types.ObjectId,
     name:{
         type:String,
         required:true
@@ -17,4 +18,4 @@ var adminschema=new schema({
     }
 })
 
-module.exports=mangoose.model("admin",adminschema);
+module.exports=mongoose.model("admin",adminschema);

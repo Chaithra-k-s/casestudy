@@ -6,29 +6,29 @@ const bodyParser=require("body-parser");
 app.use(bodyParser.json());
 
 //connect to database
-let crop=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-()=>console.log("crop database connected"));
-let farmer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-()=>console.log("farmer database connected"));
+// let crop=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
+// ()=>console.log("crop database connected"));
+// let farmer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
+// ()=>console.log("farmer database connected"));
 let dealer=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
 ()=>console.log("delaer database connected"));
-let admin=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-()=>console.log("admin database connected"));
-let invoice=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
-()=>console.log("invoice database connected"));
+// let admin=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
+// ()=>console.log("admin database connected"));
+// let invoice=mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/crop?retryWrites=true&w=majority",
+// ()=>console.log("invoice database connected"));
 
 //importing schema
-const farmerschema=require("../schemas/farmerschema");
+// const farmerschema=require("../schemas/farmerschema");
 const dealerschema=require("../schemas/dealerschema");
-const cropschema=require("../schemas/cropschema");
-const invoiceschema=require("../schemas/invoiceschema");
-const admin=require("../schemas/adminschema")
+// const cropschema=require("../schemas/cropschema");
+// const invoiceschema=require("../schemas/invoiceschema");
+// const admin=require("../schemas/adminschema")
 
 // Api methods
 
-//crop
-app.get("/crop/",(req,res)=>{
-    cropschema.find({}).exec((err,data)=>{
+//dealer
+app.get("/dealer/",(req,res)=>{
+    dealerschema.find({}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
         }
@@ -37,11 +37,11 @@ app.get("/crop/",(req,res)=>{
             console.log(data);
         }
     })
-    res.send("getting all elements from crop database collection")
+    res.send("getting all elements from dealer database collection")
 })
 
-app.get('/crop/:id',(res,req)=>{
-    cropschema.findOne({crop_name:req.params.id}).exec((err,data)=>{
+app.get('/dealer/:id',(res,req)=>{
+    dealerschema.findOne({_id:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error fetching data from database")
         }
@@ -54,13 +54,13 @@ app.get('/crop/:id',(res,req)=>{
 })
 
 app.post("/crop/",(req,res)=>{
-    cropschema.create(req.body).then((crop)=>{
+    dealerschema.create(req.body).then((crop)=>{
         res.send("crop added with following details",crop)
     })
 })
 
 app.put("/crop/:id",(req,res)=>{
-    cropschema.findOneAndUpdate({crop_name:req.params.id},{$set:
+    dealerschema.findOneAndUpdate({crop_name:req.params.id},{$set:
         {
             crop_name:req.body.crop_name,
             crop_type:req.body.crop_type,
@@ -82,7 +82,7 @@ app.put("/crop/:id",(req,res)=>{
 
 
 app.delete('/crop/:id',(res,req)=>{
-    cropschema.findOneAndDelete({crop_name:req.params.id}).exec((err,data)=>{
+    dealerschema.findOneAndDelete({crop_name:req.params.id}).exec((err,data)=>{
         if(err){
             res.send("error deleting data from database",err)
         }

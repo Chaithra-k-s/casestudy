@@ -1,7 +1,14 @@
 const mongoose=require("mongoose");
-var schema=mongoose.Schema;
+const schema=mongoose.Schema;
+
+var payment=new schema({
+    card_number : Number,
+    card_type : String,
+    cvv : Number
+})
 
 var invoiceschema=new schema({
+    _id:mongoose.Types.ObjectId,
     crop_name: String,
     quantity: Number,
     selling_price: Number,
@@ -9,11 +16,7 @@ var invoiceschema=new schema({
     payment_method: String,
     total: Number,
     seller: Object,
-    payment_method:{
-        card_number : Number,
-        card_type : String,
-        cvv : Number
-    }
+    payment_method:payment
 })
 
 module.exports=mangoose.model("invoice",invoiceschema);

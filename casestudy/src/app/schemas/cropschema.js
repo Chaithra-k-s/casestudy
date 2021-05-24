@@ -2,6 +2,7 @@ const mongoose=require("mongoose");
 var schema=mongoose.Schema;
 
 var cropschema=new schema({
+    _id:mongoose.Schema.Types.ObjectId,
     crop_name:{
         type:String,
         required:true,
@@ -15,11 +16,9 @@ var cropschema=new schema({
         type:Number,
         required:true
     },
-    location:{
-        type:string
-    },
+    location:Array,
     crop_img_url: String,
-    uploaded_by:ObjectID
+    uploaded_by:String
 })
 
-module.exports=mangoose.model("crop",cropschema);
+module.exports=mongoose.model("crop",cropschema);

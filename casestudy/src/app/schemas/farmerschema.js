@@ -1,7 +1,20 @@
 const mongoose=require("mongoose");
 var schema=mongoose.Schema;
 
+var bank=new schema({
+    account_number : {
+        type:Number,
+        required:true
+    },
+    bank_name : {
+        type:String, 
+        required:true
+    },
+    ifsc_code : String
+})
+
 var farmerschema=new schema({
+    _id:mongoose.Types.ObjectId,
     name:{
         type:String,
         required:true
@@ -16,18 +29,7 @@ var farmerschema=new schema({
         required:true
     },
     description:String,
-
-    bank_details:{
-        account_number : {
-            type:Number,
-            required:true
-        },
-        bank_name : {
-            type:String, 
-            required:true
-        },
-        ifsc_code : String
-    }
+    bank_details:bank
 })
 
 module.exports=mangoose.model("farmer",farmerschema);
