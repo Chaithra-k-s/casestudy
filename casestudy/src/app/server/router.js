@@ -4,11 +4,14 @@ const mongoose=require("mongoose");
 const morgan=require("morgan")
 const bodyParser=require("body-parser")
 const cors=require("cors");
+const bcrypt =require ("bcrypt")
+
 
 //connecting to database
 mongoose.connect("mongodb+srv://admin:123@mongodbpractise.bjozc.mongodb.net/cropdeal?retryWrites=true&w=majority",
 ()=>console.log("cropdeal database connected"));
 
+app.use('/uploads',express.static('uploads'))
 //for browsers only
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Origin",'*');

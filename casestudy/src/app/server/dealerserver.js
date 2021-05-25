@@ -2,6 +2,7 @@
 const express=require("express");
 const router=express.Router();
 const mongoose=require("mongoose");
+const bcrypt =require ("bcrypt")
 
 //connect to database
 const { db } = require("../schemas/dealerschema");
@@ -38,48 +39,70 @@ router.get('/:id',(req,res)=>{
     })
 })
 
+
 //adding crop
 router.post("/",(req,res)=>{
-    console.log(req.body)
-    const dealer=new dealerschema({
-        _id:new mongoose.Types.ObjectId(),
-        name:req.body.name,
-        email:req.body.email,
-        password:req.body.password,
-        subscribed_crops:{
-            crop_name:req.body.subscribed_crops.crop_name,
-            crop_type:req.body.subscribed_crops.crop_type
-        },
-        bank_details:{
-            bank_name:req.body.bank_details.bank_name,
-            account_number:req.body.bank_details.account_number,
-            ifsc_code:req.body.bank_details.ifsc_code
-        }
-    });
-     dealer.save()
-    .then(result=>{
-        res.status(201).json({
-            message:"updated successfully",
-            dealerdetails:result
-        })
-    })
-    .catch(err=>
-        {
-            console.log(err);
-            res.status(500).json({
-                error:err
+    dealerschema.find({email:req.body.email})
+    .exec().then(user=>{
+        if(user.length>=1){
+            return res.status(409).json({
+                message:"MAIL EXITS" 
             })
+        }else{
+            bcrypt.hash(req.body.password,10,(err,hash)=>{
+                if (err) {
+                    return res.status(500).json({
+                        error:err
+                    })
+                } else{
+                    const dealer=new dealerschema({
+                        _id:new mongoose.Types.ObjectId(),
+                        name:req.body.name,
+                        email:req.body.email,
+                        password:hash,
+                        subscribed_crops:{
+                            crop_name:req.body.subscribed_crops.crop_name,
+                            crop_type:req.body.subscribed_crops.crop_type
+                        },
+                        bank_details:{
+                            bank_name:req.body.bank_details.bank_name,
+                            account_number:req.body.bank_details.account_number,
+                            ifsc_code:req.body.bank_details.ifsc_code
+                        }
+                    });
+                     dealer.save()
+                    .then(result=>{
+                        res.status(201).json({
+                            message:"updated successfully",
+                            dealerdetails:result
+                        })
+                    })
+                    .catch(err=>{
+                        console.log(err),
+                        res.status(402).json({
+                            message:"INVALID EMAIL ID",
+                            ERROR:err._message
+                        })
+                    })
+                    }
+                })
+            }
         })
-    }
-)
+    })  
 
 //updating a particular crop
 router.put("/:id",(req,res)=>{
+    bcrypt.hash(req.body.password,10,(err,hash)=>{
+        if (err) {
+            return res.status(500).json({
+                error:err
+            })
+        }else{
     dealerschema.findOneAndUpdate({name:req.params.id},{$set:
         {
             name:req.body.name,
             email:req.body.email,
-            password:req.body.password,
+            password:hash,
             subscribed_crops:{
                 crop_name:req.body.subscribed_crops.crop_name,
                 crop_type:req.body.subscribed_crops.crop_type
@@ -89,15 +112,23 @@ router.put("/:id",(req,res)=>{
                 account_number:req.body.bank_details.account_number,
                 ifsc_code:req.body.bank_details.ifsc_code
             }
-        }})
-        .then(result=>{
-            console.log(result);
+        }
+    })
+    .then(result=>{
+        res.status(201).json({
+            message:"updated successfully",
+            dealerdetails:result
         })
-        .catch(err=>console.log(err));
-        res.status(200).json({
-            message:"updating dealer data in database",
-            edited_details:req.body
+    })
+        .catch(err=>{
+            console.log(err),
+            res.status(402).json({
+                message:"INVALID EMAIL ID",
+                ERROR:err._message
+            })
         })
+    }
+})
 })
 
 //deleteing particular crop

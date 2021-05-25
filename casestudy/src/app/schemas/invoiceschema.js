@@ -13,7 +13,7 @@ var invoiceschema=new schema({
     quantity: Number,
     selling_price: Number,
     date: Date,
-    payment_method: String,
+    paymentMethod: String,
     total: Number,
     seller: Object,
     payment_method:payment

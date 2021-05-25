@@ -6,19 +6,27 @@ const invoice=require("../schemas/invoiceschema");
 const { db } = require("../schemas/invoiceschema");
 db.collection("invoice",{autoIndexId:true})
 
-router.post('/signup',(req,res,next)=>{
-    const createdadmin=new admin({
+router.post('/generate',(req,res,next)=>{
+    const createinvoice=new invoice({
         _id:new mongoose.Types.ObjectId(),
-        name:req.body.name,
-        email:req.body.email,
-        password:req.body.password
+        crop_name: req.body.crop_name,
+        quantity: req.body.quantity,
+        selling_price: req.body.selling_price,
+        paymentMethod: req.body.paymentMethod,
+        total:(req.body.quantity*req.body.selling_price),
+        seller: req.body.seller,
+        payment_method:{
+            card_number : req.body.payment_method.card_number,
+            card_type : req.body.payment_method.card_type,
+            cvv : req.body.payment_method.cvv
+        }
     })
-    createdadmin.save().then(result=>{
+    createinvoice.save().then(result=>{
         console.log(result);
     }).catch(err=>console.log(err))
     res.status(201).json({
-        message:"adding admin details",
-        createdadmin:createdadmin
+        message:"adding invoice details",
+        createdadmin:createinvoice
     })
     console.log(req.body);
 })
