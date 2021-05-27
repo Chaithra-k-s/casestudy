@@ -1,1 +1,26 @@
+<body>
+    <div>
+        <button mat-icon-button [matMenuTriggerFor]="appMenu"><mat-icon>menu</mat-icon></button>
+        <button mat-icon-button><a href="admin"><mat-icon>shopping_cart</mat-icon></a></button>
+        <button mat-icon-button><a href="admin"><mat-icon>store</mat-icon></a></button> 
+    </div>
+    
+    <mat-menu color="primary" #appMenu="matMenu">
+        <ng-template matMenuContent let-name="name">
+        <button mat-menu-item ><mat-icon>account_circle</mat-icon>SIGNUP</button>
+        <button mat-menu-item [matMenuTriggerFor]="subMenu">SIGN-IN</button>
+        <button mat-menu-item>LOGOUT</button>
+        </ng-template>
+    </mat-menu>
+
+    <mat-menu #subMenu="matMenu">
+        <ng-template matMenuContent let-name="name">
+        <button mat-menu-item >FARMER</button>
+        <button mat-menu-item ><a href="dealer">DEALER</a></button>
+        <button mat-menu-item><mat-icon>supervisor_account</mat-icon><a href="admin">ADMIN</a></button>
+        </ng-template>
+    </mat-menu>
+    
+</body>
 <router-outlet></router-outlet>
+
